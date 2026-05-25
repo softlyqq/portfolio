@@ -312,6 +312,12 @@
     btn.textContent = isLight ? '☾ Dark' : '☀ Light';
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
   });
+
+  if (new URLSearchParams(location.search).get('back')) {
+  document.querySelector('.splash').style.display = 'none';
+  document.querySelector('.page').style.animation = 'none';
+  document.querySelector('.page').style.opacity = '1';
+}
 </script>
 
 </body>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0b0f;
+    --accent: #00e5ff;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --border: rgba(0,229,255,0.18);
+    --card-bg: rgba(13,18,25,0.85);
+    --font-title: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── LIGHT THEME ── */
+  body.light {
+    --bg: #f0f4f8;
+    --text: #1e293b;
+    --muted: #475569;
+    --card-bg: rgba(255,255,255,0.9);
+    --border: rgba(0,150,180,0.25);
+    --accent: #0284c7;
+    background: #f0f4f8;
+    color: #1e293b;
+  }
+
+  body.light::before {
+    background-image:
+      linear-gradient(rgba(0,150,180,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,150,180,0.05) 1px, transparent 1px);
+  }
+
+  body.light .splash { background: #f0f4f8; }
+  body.light .video-placeholder { background: #e2e8f0; }
+  body.light .hero-name { color: #0f172a; }
+  body.light .sec-title { color: #0f172a; }
+  body.light .tl-event { color: #0f172a; }
+  body.light .stat-num { color: #0f172a; }
+  body.light .card p { color: #475569; }
+
+  /* ── THEME BUTTON ── */
+  .theme-btn {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    z-index: 10000;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    user-select: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .theme-btn:hover { background: var(--accent); color: #fff; }
+
+  /* ── SPLASH ── */
+  .splash {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 9999;
+    animation: fadeOut 0.8s ease forwards;
+    animation-delay: 3s;
+  }
+
+  .splash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0,229,255,0.03) 3px, rgba(0,229,255,0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  .splash-logo {
+    font-family: var(--font-title);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,229,255,0.5);
+  }
+
+  .splash-sub {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: rgba(0,229,255,0.5);
+  }
+
+  .splash-bar-wrap {
+    width: 240px;
+    height: 2px;
+    background: rgba(0,229,255,0.1);
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+
+  .splash-bar {
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: barFill 2.6s cubic-bezier(0.4,0,0.2,1) 0.3s forwards;
+  }
+
+  @keyframes barFill {
+    0%  { width: 0%; }
+    40% { width: 55%; }
+    80% { width: 88%; }
+    100%{ width: 100%; }
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  /* ── GRID BG ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    opacity: 0;
+    animation: showContent 0.8s ease forwards;
+    animation-delay: 3.5s;
+  }
+
+  @keyframes showContent { to { opacity: 1; } }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 4rem;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    font-family: var(--font-title);
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-weight: 700;
+    line-height: 0.95;
+    color: #fff;
+    transition: color 0.3s;
+  }
+
+  .hero-name span { color: var(--accent); text-shadow: 0 0 30px rgba(0,229,255,0.4); }
+
+  .hero-role {
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    color: var(--muted);
+    margin-top: 1.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-desc {
+    max-width: 500px;
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    color: #94a3b8;
+    line-height: 1.8;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    padding: 0.7rem 1.75rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .hero-btn:hover { background: var(--accent); color: #000; }
+  .hero-btn::after { content: '→'; }
+
+  .ring {
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 220px; height: 220px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .ring::before { content: ''; position: absolute; inset: 15px; border: 1px solid var(--border); border-radius: 50%; }
+  .ring::after  { content: ''; position: absolute; inset: 30px; border: 1px solid var(--border); border-radius: 50%; }
+
+  /* ── SECTIONS ── */
+  section { padding: 5rem 0; }
+
+  .sec-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .sec-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+    transition: color 0.3s;
+  }
+
+  .sec-title em { font-style: normal; color: var(--accent); }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent 60%);
+    margin-bottom: 2.5rem;
+    opacity: 0.25;
+  }
+
+  /* ── CARDS ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .card h3 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .card p { color: #94a3b8; font-size: 0.93rem; line-height: 1.8; transition: color 0.3s; }
+
+  /* ── STATS ── */
+  .stats-row { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
+
+  .stat-num {
+    font-family: var(--font-title);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  /* ── SKILLS ── */
+  .skills-list { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.5rem; }
+
+  .skill-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    padding: 0.38rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    background: rgba(0,229,255,0.05);
+    text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .skill-tag:hover { background: rgba(0,229,255,0.12); border-color: var(--accent); }
+
+  /* ── VIDEO ── */
+  .video-frame {
+    position: relative;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+
+  .video-frame::before, .video-frame::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: var(--accent);
+    border-style: solid;
+    z-index: 2;
+  }
+  .video-frame::before { top: -4px; left: -4px; border-width: 2px 0 0 2px; }
+  .video-frame::after  { bottom: -4px; right: -4px; border-width: 0 2px 2px 0; }
+
+  .video-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .video-inner video,
+  .video-inner iframe {
+    width: 100%; height: 100%;
+    display: block; object-fit: cover; border: none;
+  }
+
+  .video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #060a0e;
+    transition: background 0.3s;
+  }
+
+  .play-btn {
+    width: 68px; height: 68px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseRing 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseRing {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,229,255,0.3); }
+    50%       { box-shadow: 0 0 0 14px rgba(0,229,255,0); }
+  }
+
+  .play-btn svg { width: 26px; height: 26px; fill: var(--accent); margin-left: 4px; }
+
+  .video-placeholder p {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+    animation: scanDown 4s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  @keyframes scanDown { from { top: 0%; } to { top: 100%; } }
+
+  .video-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.875rem 1.25rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .video-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.7rem;
+    border: 1px solid var(--border);
+  }
+
+  .video-title-text {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    opacity: 0.4;
+  }
+
+  .tl-item { position: relative; padding-bottom: 2.25rem; }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -2.38rem; top: 0.35rem;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .tl-year {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.3rem;
+  }
+
+  .tl-event {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.2rem;
+    transition: color 0.3s;
+  }
+
+  .tl-desc { font-size: 0.88rem; color: #64748b; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.25rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer p {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-coords {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: rgba(0,229,255,0.35);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    .ring { display: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ── VIDEO CARD LINK ── */
+  .video-card-link { text-decoration: none; display: block; }
+
+  .video-card {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+    cursor: pointer;
+  }
+
+  .video-card::before, .video-card::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: var(--accent);
+    border-style: solid;
+    z-index: 2;
+    transition: border-color 0.25s;
+  }
+  .video-card::before { top: -3px; left: -3px; border-width: 2px 0 0 2px; }
+  .video-card::after  { bottom: -3px; right: -3px; border-width: 0 2px 2px 0; }
+
+  .video-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .video-card-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 6;
+    background: #060a0e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* placeholder image — замін src якщо є свій скріншот */
+  .video-card-preview img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.45;
+    transition: opacity 0.3s;
+    filter: saturate(0.6);
+  }
+
+  .video-card:hover .video-card-preview img { opacity: 0.6; }
+
+  body.light .video-card-preview { background: #dde3ea; }
+
+  .video-card-play {
+    width: 64px; height: 64px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseRing 2s ease-in-out infinite;
+    transition: transform 0.2s;
+  }
+
+  .video-card:hover .video-card-play { transform: scale(1.1); }
+
+  .video-card-play svg { width: 24px; height: 24px; fill: var(--accent); margin-left: 4px; }
+
+  .video-card-scan {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.35;
+    animation: scanDown 4s linear infinite;
+    pointer-events: none;
+  }
+
+  .video-card-body {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .video-card-badges { display: flex; gap: 0.6rem; align-items: center; }
+
+  .video-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border);
+  }
+
+  .video-badge-dim {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border);
+  }
+
+  .video-card-title {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+    min-width: 180px;
+    transition: color 0.3s;
+  }
+
+  body.light .video-card-title { color: #0f172a; }
+
+  .video-card-desc {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ THEME BUTTON ═══ -->
+<button class="theme-btn" id="themeBtn">☀ Light</button>
+
+<!-- ═══ SPLASH SCREEN ═══ -->
+<div class="splash">
+  <div class="splash-logo">Dmytro Shyrokyi</div>
+  <div class="splash-sub">Loading portfolio...</div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar"></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">about me // profile.exe</div>
+    <h1 class="hero-name">Dmytro<br><span>Shyrokyi</span></h1>
+    <p class="hero-role">// student · developer · creator</p>
+    <p class="hero-desc">
+      Hi! I'm Dmytro Shyrokyi — passionate about web development and design.
+      Here you'll find my projects, skills, and a bit about who I am.
+    </p>
+    <a href="#about" class="hero-btn">Learn more</a>
+    <div class="ring"></div>
+  </section>
+
+  <!-- VIDEO LINK -->
+  <section id="video">
+    <div class="sec-label">// media</div>
+    <h2 class="sec-title">AI-<em>Generated</em> Video</h2>
+    <p style="color:#94a3b8;font-size:0.93rem;margin-bottom:2rem;max-width:520px">
+      A 60-second cinematic journey through the history of Kyiv, generated entirely by artificial intelligence.
+    </p>
+
+    <a href="video.html" class="video-card-link">
+      <div class="video-card">
+        <div class="video-card-preview">
+          <!-- Заміни src на свій скріншот з відео, напр. preview.jpg -->
+          <img src="preview.png" alt="Kyiv: The Eternal Gold" onerror="this.style.display='none'">
+          <div style="position:relative;z-index:2;text-align:center;">
+            <div class="video-card-play">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:0.6rem;color:rgba(0,229,255,0.5);letter-spacing:0.2em;margin-top:0.75rem;text-transform:uppercase;">Kyiv: The Eternal Gold</div>
+          </div>
+          <div class="video-card-scan"></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-badges">
+            <span class="video-badge">AI Generated</span>
+            <span class="video-badge-dim">2025</span>
+          </div>
+          <div class="video-card-title">Kyiv: The Eternal Gold</div>
+          <div class="video-card-desc">// AI-generated · 60s · watch now →</div>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-label">// about</div>
+    <h2 class="sec-title">About <em>Me</em></h2>
+    <div class="divider"></div>
+
+    <div class="about-grid">
+      <div class="card">
+        <h3>// who I am</h3>
+        <p>A student passionate about technology and creativity. I learn web development, explore artificial intelligence, and love turning ideas into real working projects.</p>
+      </div>
+      <div class="card">
+        <h3>// what I do</h3>
+        <p>I build websites, study programming, and explore AI tools. This portfolio site is one of my school projects.</p>
+      </div>
+      <div class="card">
+        <h3>// goals</h3>
+        <p>I want to become a developer who bridges technology and design. I believe the future belongs to those who know how to work with AI.</p>
+      </div>
+      <div class="card">
+        <h3>// hobbies</h3>
+        <p>Gaming, music, digital illustration. When I'm away from the screen I read about new tech or watch documentaries about space.</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div>
+        <div class="stat-num">3<span>+</span></div>
+        <div class="stat-label">years learning</div>
+      </div>
+      <div>
+        <div class="stat-num">12<span>+</span></div>
+        <div class="stat-label">projects</div>
+      </div>
+      <div>
+        <div class="stat-num">5<span>+</span></div>
+        <div class="stat-label">technologies</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="sec-label">// skills</div>
+    <h2 class="sec-title">My <em>Skills</em></h2>
+    <div class="divider"></div>
+    <div class="skills-list">
+      <span class="skill-tag">HTML</span>
+      <span class="skill-tag">CSS</span>
+      <span class="skill-tag">JavaScript</span>
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">Git</span>
+      <span class="skill-tag">Figma</span>
+      <span class="skill-tag">AI Tools</span>
+      <span class="skill-tag">Photoshop</span>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section>
+    <div class="sec-label">// history</div>
+    <h2 class="sec-title">My <em>Journey</em></h2>
+    <div class="divider"></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-event">First Website</div>
+        <div class="tl-desc">Built my first HTML page and fell in love with web development</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-event">CSS & JavaScript</div>
+        <div class="tl-desc">Started building interactive projects with animations and logic</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-event">AI Integration</div>
+        <div class="tl-desc">Began using AI tools for content generation and coding assistance</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-event">This Portfolio</div>
+        <div class="tl-desc">Built my own portfolio site — and here you are!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 · Dmytro Shyrokyi · all systems operational</p>
+    <p class="footer-coords">portfolio v2.0 // made with HTML & CSS</p>
+  </footer>
+
+</div>
+
+<!-- ═══ JS — завжди в кінці body ═══ -->
+<script>
+  const btn = document.getElementById('themeBtn');
+
+  // Застосовуємо збережену тему одразу
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    btn.textContent = '☾ Dark';
+  }
+
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light');
+    btn.textContent = isLight ? '☾ Dark' : '☀ Light';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+</script>
+
+</body>
+</html>

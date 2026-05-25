@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Video — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0b0f;
+    --accent: #00e5ff;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --border: rgba(0,229,255,0.18);
+    --card-bg: rgba(13,18,25,0.85);
+    --font-title: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  body.light {
+    --bg: #f0f4f8;
+    --text: #1e293b;
+    --muted: #475569;
+    --card-bg: rgba(255,255,255,0.9);
+    --border: rgba(0,150,180,0.25);
+    --accent: #0284c7;
+    background: #f0f4f8;
+    color: #1e293b;
+  }
+
+  body.light::before {
+    background-image:
+      linear-gradient(rgba(0,150,180,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,150,180,0.05) 1px, transparent 1px);
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── BUTTONS ── */
+  .back-btn {
+    position: fixed;
+    top: 1.25rem;
+    left: 1.5rem;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+  }
+  .back-btn::before { content: '←  '; }
+  .back-btn:hover { background: var(--accent); color: #fff; }
+
+  .theme-btn {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    z-index: 1000;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .theme-btn:hover { background: var(--accent); color: #fff; }
+
+  /* ── PAGE ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 7rem 1.5rem 5rem;
+  }
+
+  /* ── HEADER ── */
+  .page-label {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .page-title {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.05;
+    margin-bottom: 2.5rem;
+    transition: color 0.3s;
+  }
+
+  body.light .page-title { color: #0f172a; }
+  .page-title em { font-style: normal; color: var(--accent); }
+
+  /* ── VIDEO FRAME ── */
+  .video-frame {
+    position: relative;
+    border: 1px solid var(--border);
+    background: #000;
+    margin-bottom: 2rem;
+  }
+
+  .video-frame::before, .video-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--accent);
+    border-style: solid;
+    z-index: 2;
+  }
+  .video-frame::before { top: -4px; left: -4px; border-width: 2px 0 0 2px; }
+  .video-frame::after  { bottom: -4px; right: -4px; border-width: 0 2px 2px 0; }
+
+  .video-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .video-inner video,
+  .video-inner iframe {
+    width: 100%; height: 100%;
+    display: block; border: none;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.3;
+    animation: scanDown 5s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  @keyframes scanDown { from { top: 0%; } to { top: 100%; } }
+
+  .video-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .video-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border);
+  }
+
+  .video-badge-dim {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+
+  /* ── DESCRIPTION ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent 60%);
+    margin-bottom: 1.5rem;
+    opacity: 0.2;
+  }
+
+  .desc-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .desc-text {
+    font-size: 0.97rem;
+    color: #94a3b8;
+    line-height: 1.9;
+    max-width: 680px;
+  }
+
+  body.light .desc-text { color: #475569; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0 0;
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer p {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<a href="about.html?back=1" class="back-btn">Back</a>
+<button class="theme-btn" id="themeBtn">☀ Light</button>
+
+<div class="page">
+
+  <div class="page-label">// KYIV: THE ETERNAL GOLD</div>
+  <h1 class="page-title">AI-<em>Generated</em> Video</h1>
+
+  <!-- VIDEO -->
+  <div class="video-frame">
+    <div class="video-inner">
+
+      <video controls>
+        <source src="kyiv_eternal_gold_cinematic_poetic.webm" type="video/webm">
+        Your browser does not support the video tag.
+      </video>
+
+    
+
+      <div class="scan-line"></div>
+    </div>
+    <div class="video-meta">
+      <span class="video-badge">AI Generated</span>
+      <span class="video-badge-dim">// 2025 · 0:60</span>
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="divider"></div>
+  <div class="desc-label">// description</div>
+  <p class="desc-text">
+    Kyiv: The Eternal Gold is a 60-second AI-generated timelapse created as part of a school project on artificial intelligence and media production. The video takes the viewer on a journey through the centuries-long history of Kyiv — from its founding on the Dnipro riverbanks in the 5th century, through the golden age of Kyivan Rus, to the resilient and modern city it is today. Each scene was crafted using carefully written prompts and refined through multiple generations to reflect the architecture, atmosphere, and spirit of one of Europe's oldest capitals.
+  </p>
+
+  <footer>
+    <p>© 2025 · Dmytro Shyrokyi</p>
+    <p><a href="about.html">← back to portfolio</a></p>
+  </footer>
+
+</div>
+
+<script>
+  const btn = document.getElementById('themeBtn');
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    btn.textContent = '☾ Dark';
+  }
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light');
+    btn.textContent = isLight ? '☾ Dark' : '☀ Light';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+</script>
+
+</body>
+</html>
